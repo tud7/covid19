@@ -37,26 +37,21 @@ new_cases_out       = widgets.Output()
 # In[3]:
 
 
-def load_data():
+def load_data(url, archived_csv=None):
     '''
     Function to download latest data from the WHO URL and load into the data frame
     '''
     
-    csv_file = 'latest_who_covid19_data.csv'
     try:
-        
-        url = 'https://covid.ourworldindata.org/data/ecdc/full_data.csv'
-        urllib.request.urlretrieve(url, csv_file)
+        df = pd.read_csv(url)
         
     except urllib.error.HTTPError as ex:
         print('WARNING: Unable to retrieve data...')
         print(' - INFO:', ex)
         
-        csv_file = 'who_covid19_data_20200317.csv'
-        print(' - INFO: Loading the default data: ', csv_file)
-
-    # read data into pandas data frame
-    df = pd.read_csv(csv_file)
+        if archived_csv is not None:
+            df = pd.read_csv(archived_csv)
+            print(' - INFO: Loading the archived data: ', archived_csv)
 
     return df
 
@@ -112,7 +107,8 @@ def on_location_change2(change):
 
 
 # load data into pandas data frame
-df = load_data()
+covid19_fulldata_url = "https://covid.ourworldindata.org/data/ecdc/fulldata.csv"
+df = load_data(url=covid19_fulldata_url, archived_csv="who_covid19_data_20200317.csv")
 
 
 # In[7]:
