@@ -45,6 +45,8 @@ def load_data(url, archived_csv=None):
     try:
         df = pd.read_csv(url)
         
+        #TODO: archive csv file if successfully read for offline use
+        
     except urllib.error.HTTPError as ex:
         print('WARNING: Unable to retrieve data...')
         print(' - INFO:', ex)
@@ -107,7 +109,7 @@ def on_location_change2(change):
 
 
 # load data into pandas data frame
-covid19_fulldata_url = "https://covid.ourworldindata.org/data/ecdc/fulldata.csv"
+covid19_fulldata_url = "https://covid.ourworldindata.org/data/ecdc/full_data.csv"
 df = load_data(url=covid19_fulldata_url, archived_csv="who_covid19_data_20200317.csv")
 
 
