@@ -93,15 +93,12 @@ fig.add_trace(go.Bar(name='Daily Tests',
 
 fig.update_layout(
     title='COVID-19 (Cumulative and Daily) Tests vs. S&P 500',
-    xaxis_tickfont_size=12,
-    yaxis=dict(
-        title='Number of Tests (Millions)',
-        titlefont_size=12,
-        tickfont_size=12,
-    ),
     barmode='overlay',
     bargap=0.3,    # gap between bars of adjacent location coordinates
 )
+
+fig.update_yaxes(title_text="Number of Tests (Millions)", secondary_y=False)
+fig.update_yaxes(title_text="S&P 500 Index", secondary_y=True)
 
 fig.show()
 
