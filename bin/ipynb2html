@@ -1,1 +1,17 @@
-jupyter-nbconvert --execute --no-input --ExecutePreprocessor.kernel_name=python3 $1
+#!/bin/bash
+
+
+if [[ $# -eq 0 ]] ; then
+    echo "Usage: $0 IPYNB_FILE [HTML_FILE]"
+    exit 1
+fi
+
+IPYNB_FILE=$1
+OUTFILE_OPT=''
+
+if [ ! -z "$2" ]
+then
+    OUTFILE_OPT="--output $2"
+fi
+
+jupyter-nbconvert --execute --no-input $OUTFILE_OPT --ExecutePreprocessor.kernel_name=python3 $IPYNB_FILE
