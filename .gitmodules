@@ -1,3 +1,0 @@
-[submodule "johns_hopkins_data"]
-	path = johns_hopkins_data
-	url = https://github.com/CSSEGISandData/COVID-19.git
