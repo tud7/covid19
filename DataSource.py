@@ -14,44 +14,55 @@ class DataSource(ABC):
     def __init__(self, url):
         
         self.url = url
-        self.read_data()
+        self._read_data()
         self._reformat_data()
+        self._unify_date()
         
      
-    def read_data(self):
+    def _read_data(self):
         '''Read data from the url into the panda dataframe'''
         
         try:
             self.df = pd.read_csv(self.url)
-            self._reformat_data()
         
         except urllib.error.HTTPError as ex:
             print('WARNING: Unable to retrieve data...')
             print(' - INFO:', ex)
     
     
-    @abstractmethod
-    def _reformat_data(self):
-        pass
+    def _unify_date(self):
+        '''Unify 'date' column to the same data type for easy merging and plotting'''
+        
+        try:
+            self.df['date'] = pd.to_datetime(self.df['date'])
+        except:
+            pass
     
     
     def get_full_data(self):
         '''Function to get full data frame'''
+        
         return self.df
+    
+    
+    def _reformat_data(self):
+        pass
+    
+    
+    def get_US_data(self):
+        return None
         
         
 class JohnHopkins(DataSource):
 
-    def __init__(self, url):
-        
-        if url is None:
-            url = self._get_latest_JH_report()
-            
-        super().__init__(url)
+    def __init__(self, url=None):
+        super().__init__(self._get_latest_JH_report())
         
     
-    def _reformat_data(self):
-        pass
+    def get_US_data(self):
+        '''Funtion to return United States data'''
+        
+        return self.df[ self.df['Country_Region']=='US' ]
     
     
     def _get_latest_JH_report(self):
@@ -75,30 +86,29 @@ class JohnHopkins(DataSource):
 
 class CovidTracking(DataSource):
     
-    def __init__(self, url):
-        super().__init__(url)
+    def __init__(self):
+        super().__init__('https://covidtracking.com/api/v1/us/daily.csv')
     
     
     def _reformat_data(self):
         
         self.df = self.df.sort_values(by='date', ascending=True)
         
-        # convert 'date' column to the same data type for merging later
-        # note: we need to convert to string first since us_covid19_test_data['date'] is int64.
-        # to_datetime won't work well with int64
-        self.df['date'] = self.df['date'].astype(str) 
-        self.df['date'] = pd.to_datetime(self.df['date'])
+        # convert to string first since 'date' column is int64.
+        # to_datetime() function won't work well with int64
+        self.df['date'] = self.df['date'].astype(str)
         
         
 class OurWorldInData(DataSource):
     
-    def __init__(self, url):
-        super().__init__(url)
+    def __init__(self):
+        super().__init__('https://covid.ourworldindata.org/data/ecdc/full_data.csv')
     
     
-    def _reformat_data(self): 
-        self.df['date'] = pd.to_datetime(self.df['date'])
+    def get_US_data(self):
+        '''Funtion to return United States data'''
         
+        return self.df[ self.df['location']=='United States' ]
 
 
         
