@@ -49,8 +49,10 @@ class DataSource(ABC):
         pass
     
     
+    @abstractmethod
     def get_US_data(self):
-        return None
+        '''Funtion to return United States data'''
+        pass
         
         
 class JohnHopkins(DataSource):
@@ -60,8 +62,6 @@ class JohnHopkins(DataSource):
         
     
     def get_US_data(self):
-        '''Funtion to return United States data'''
-        
         return self.df[ self.df['Country_Region']=='US' ]
     
     
@@ -98,6 +98,10 @@ class CovidTracking(DataSource):
         # to_datetime() function won't work well with int64
         self.df['date'] = self.df['date'].astype(str)
         
+    
+    def get_US_data(self):
+        return self.df
+        
         
 class OurWorldInData(DataSource):
     
@@ -106,8 +110,6 @@ class OurWorldInData(DataSource):
     
     
     def get_US_data(self):
-        '''Funtion to return United States data'''
-        
         return self.df[ self.df['location']=='United States' ]
 
 
